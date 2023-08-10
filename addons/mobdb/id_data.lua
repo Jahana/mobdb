@@ -688,10 +688,12 @@ phList = {
     [16920660] = "Ix'Aern (DRK)",
     [16920661] = "Ix'Aern (DRK)",
     [16920662] = "Ix'Aern (DRK)",
-    [16920663] = "Ix'Aern (DRK)",
+    [16920665] = "Ix'Aern (DRK)",
+    [16920666] = "Ix'Aern (DRK)",
+    [16920667] = "Ix'Aern (DRK)",
 
     -- The Sanctuary of Zi'Tah
-    [17272977] = "Keeper of Haildom",
+    [17272977] = "Keeper of Halidom",
     [17273276] = "Noble Mold",
     [17273277] = "Noble Mold",
 
