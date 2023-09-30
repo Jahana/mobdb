@@ -249,7 +249,7 @@ function details:Render()
                 if k == id then PH = v end
             end
         end
-        if not PH == 'None' then
+        if not (PH == 'None') then
             imgui.TextColored(self.Header, 'PH:');
             imgui.SameLine();
             imgui.Text(PH);
