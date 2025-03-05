@@ -14,6 +14,13 @@ local SettingsGui = {
     }
 };
 
+local speedExplanation = 'Entity speed, displayed in format 100% 125% etc.';
+local speedRelativeExplanation = 'Entity speed, displayed in format +12.5% -12.5% etc.'
+if (ashita.addons_version < 2.2) then
+    speedExplanation = 'Entity speed, displayed in format 100%% 125%% etc.';
+    speedRelativeExplanation = 'Entity speed, displayed in format +12.5%% -12.5%% etc.'
+end
+
 local TokenHelpData = {
     { Token='$name', Explanation='The name of your current target.'},
     { Token='$ph', Explanation='Displays if selected target is a placeholder for a NM,'},
@@ -38,11 +45,13 @@ local TokenHelpData = {
     { Token='$hpp', Explanation='The target\'s current HP percentage.'},
     { Token='$dynamic', Explanation='Dynamic if the monster is a custom spawn, Static if it is a normal spawn.'},
     { Token='$aggro', Explanation='Graphical display indicating whether the target aggros, links, is a NM, and how it detects you.'},
-    { Token='$speed', Explanation='Entity speed, displayed in format 100%% 125%% etc.'},
-    { Token='$speedrelative', Explanation='Entity speed, displayed in format +12.5%% -12.5%% etc.'}, 
+    { Token='$speed', Explanation=speedExplanation},
+    { Token='$speedrelative', Explanation=speedRelativeExplanation}, 
     { Token='$debugflags', Explanation='Show all flags for debug purposes.' },
     { Token='$debugimmunity', Explanation='Show all immunity icons for debug purposes.' },
     { Token='$direction', Explanation='Show the cardinal direction in which the target resides.' },
+    { Token='$drops', Explanation='Show target drops as a comma-seperated line.' },
+    { Token='$dropssplit', Explanation='Show target drops with each drop on a new line.' },
     { Token='$notes', Explanation='Any notes saved on the target in the database.  Multiple notes always take a new line.' }
 };
 
@@ -63,11 +72,10 @@ end
 
 function SettingsGui:Render()
     if (self.TokenEditor.IsOpen[1]) then
-        imgui.SetNextWindowSize({ 540, 235, });
-        if (imgui.Begin('MobDB Token Editor', self.TokenEditor.IsOpen, ImGuiWindowFlags_NoResize)) then
+        if (imgui.Begin('MobDB Token Editor', self.TokenEditor.IsOpen, ImGuiWindowFlags_AlwaysAutoResize)) then
             for _,category in ipairs(self.TokenEditor.Categories) do
                 imgui.TextColored(self.Theme.Header, string.format('%s Targeted', category));
-                imgui.PushItemWidth(-1);
+                imgui.PushItemWidth(400);
                 if imgui.InputText('##Token_' .. category, self.TokenEditor.Strings[category], 1080) then
                    self.Parent[category .. 'Format'] = self.TokenEditor.Strings[category][1];
                    gBar:ParseFormats(category .. 'Format'); 
@@ -95,9 +103,7 @@ function SettingsGui:Render()
     else
         self.TokenHelper.IsOpen[1] = false;
         if (self.IsOpen[1]) then
-            imgui.SetNextWindowContentSize({ 223, 282 });
             if (imgui.Begin(string.format('%s v%s', addon.name, addon.version), self.IsOpen, ImGuiWindowFlags_AlwaysAutoResize)) then
-                imgui.BeginGroup();
                 imgui.TextColored(self.Theme.Header, 'Save Mode');
                 if imgui.Checkbox('Character-Specific', { self.Parent.CharacterSpecific }) then
                     self.Parent:ToggleCharacterSpecific();
@@ -136,7 +142,6 @@ function SettingsGui:Render()
                 if (imgui.Button('Edit Tokens')) then
                     self.TokenEditor.IsOpen[1] = true;
                 end
-                imgui.EndGroup();
                 imgui.End();
             end
         end
